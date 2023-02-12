@@ -38,9 +38,9 @@ p {
   padding: 0;
   margin: 0;
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-30%, -50%);
 }
 
 .country-item {
@@ -51,9 +51,9 @@ p {
 
 .country-info {
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-30%, -50%);
 }
 
 .country-name {

@@ -8,43 +8,34 @@ const searchInput = document.querySelector('#search-box');
 
 const listOfCountries = document.querySelector('.country-list');
 const countryInfoContainer = document.querySelector('.country-info');
-let countries = null;
-let countryFullName = null;
-let countryCapital = null;
-let countryPopulation = null;
-let countryFlag = null;
-let langList = null;
-
+let countries = [];
 searchInput.addEventListener(
   'input',
   debounce(() => {
     const countryName = searchInput.value.trim();
+
+    if (!countryName) {
+      return;
+    }
     fetchCountries(countryName)
       .then(countrydata => {
         countries = countrydata;
-        countryFullName = countries[0].name.official;
-        countryCapital = countries[0].capital;
-        countryPopulation = countries[0].population;
-        countryFlag = countries[0].flags.svg;
-        langList = Object.values(countries[0].languages)
-          .toString()
-          .split(',')
-          .join(', ');
 
         if (countries.length > 10) {
-          Notify.info(
+          listOfCountries.innerHTML = '';
+          countryInfoContainer.innerHTML = '';
+          return Notify.info(
             'Too many matches found. Please enter a more specific name.'
           );
-        }
-        if (countries.length >= 2 && countries.length <= 10) {
-          renderListOfCountries();
-        }
-        if (countries.length === 1) {
-          eraseCountryInfo();
-          renderOneCountry();
-        }
-        if (countryName === '') {
-          eraseCountryInfo();
+        } else if (countries.length >= 2 && countries.length <= 10) {
+          countryInfoContainer.innerHTML = '';
+          return renderListOfCountries(countries);
+        } else if (countries.length === 1) {
+          listOfCountries.innerHTML = '';
+          return renderOneCountry(countries);
+        } else if (countryName === '') {
+          listOfCountries.innerHTML = '';
+          countryInfoContainer.innerHTML = '';
         }
       })
       .catch(showError);
@@ -52,33 +43,39 @@ searchInput.addEventListener(
 );
 
 function showError() {
-  Notify.failure('Oops, there is no country with that name');
+  listOfCountries.innerHTML = '';
+  countryInfoContainer.innerHTML = '';
+  return Notify.failure('Oops, there is no country with that name');
 }
 
-function renderListOfCountries() {
-  countries.forEach(country => {
-    const countriesList = `
+function renderListOfCountries(countries) {
+  const countriesListMarkup = countries
+    .map(country => {
+      return `
   <li class ="country-item"><img src = '${country.flags.svg}' width="30", height ="20"><p>${country.name.official}</p>
   </li>
   `;
-    listOfCountries.insertAdjacentHTML('beforeend', countriesList);
-  });
+    })
+    .join('');
+
+  listOfCountries.insertAdjacentHTML('beforeend', countriesListMarkup);
 }
 
-function renderOneCountry() {
-  const countryInfo = `
-  <img src = '${countryFlag}' width="40", height ="30">
-  <h1>${countryFullName}</h1>
+function renderOneCountry(countries) {
+  const oneCountryMarkup = countries
+    .map(country => {
+      return `
+  <img src = '${country.flags.svg}' width="40", height ="30">
+  <h1 class="country-name">${country.name.official}</h1>
   
-  <p><b>Capital: </b>${countryCapital}</p>
+  <p class = "country-data"><b>Capital: </b>${country.capital}</p>
   
- <p><b>Population: </b>${countryPopulation}</p> 
+ <p class = "country-data"><b>Population: </b>${country.population}</p> 
   
-  <p><b>Languages: </b>${langList}</p>`;
-  countryInfoContainer.insertAdjacentHTML('beforeend', countryInfo);
-}
-
-function eraseCountryInfo() {
-  listOfCountries.innerHTML = '';
-  countryInfoContainer.innerHTML = '';
+  <p class = "country-data"><b>Languages: </b>${Object.values(
+    country.languages
+  )}</p>`;
+    })
+    .join('');
+  countryInfoContainer.innerHTML = oneCountryMarkup;
 }

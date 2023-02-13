@@ -29,10 +29,10 @@ searchInput.addEventListener(
           );
         } else if (countries.length >= 2 && countries.length <= 10) {
           countryInfoContainer.innerHTML = '';
-          return renderListOfCountries(countries);
+          renderListOfCountries(countries);
         } else if (countries.length === 1) {
           listOfCountries.innerHTML = '';
-          return renderOneCountry(countries);
+          renderOneCountry(countries);
         } else if (countryName === '') {
           listOfCountries.innerHTML = '';
           countryInfoContainer.innerHTML = '';

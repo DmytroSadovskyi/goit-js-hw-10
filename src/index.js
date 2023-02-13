@@ -52,20 +52,22 @@ function renderListOfCountries(countries) {
   const countriesListMarkup = countries
     .map(country => {
       return `
-  <li class ="country-item"><img src = '${country.flags.svg}' width="30", height ="20"><p>${country.name.official}</p>
+  <li class ="country-item"><img src = '${country.flags.svg}' width="50", height ="40" alt = "Flag of ${country.name.official}"><p>${country.name.official}</p>
   </li>
   `;
     })
     .join('');
 
-  listOfCountries.insertAdjacentHTML('beforeend', countriesListMarkup);
+  listOfCountries.innerHTML = countriesListMarkup;
 }
 
 function renderOneCountry(countries) {
   const oneCountryMarkup = countries
     .map(country => {
       return `
-  <img src = '${country.flags.svg}' width="40", height ="30">
+  <img class = "country-img" src = '${
+    country.flags.svg
+  }' width="100", height ="70" alt = "Flag of ${country.name.official}">
   <h1 class="country-name">${country.name.official}</h1>
   
   <p class = "country-data"><b>Capital: </b>${country.capital}</p>
@@ -74,7 +76,7 @@ function renderOneCountry(countries) {
   
   <p class = "country-data"><b>Languages: </b>${Object.values(
     country.languages
-  )}</p>`;
+  ).join(', ')}</p>`;
     })
     .join('');
   countryInfoContainer.innerHTML = oneCountryMarkup;

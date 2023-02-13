@@ -15,6 +15,8 @@ searchInput.addEventListener(
     const countryName = searchInput.value.trim();
 
     if (!countryName) {
+      listOfCountries.innerHTML = '';
+      countryInfoContainer.innerHTML = '';
       return;
     }
     fetchCountries(countryName)
@@ -33,9 +35,6 @@ searchInput.addEventListener(
         } else if (countries.length === 1) {
           listOfCountries.innerHTML = '';
           renderOneCountry(countries);
-        } else if (countryName === '') {
-          listOfCountries.innerHTML = '';
-          countryInfoContainer.innerHTML = '';
         }
       })
       .catch(showError);

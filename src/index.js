@@ -1,45 +1,50 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix';
-import { fetchCountries } from './js/fetchCountries';
+import { fetchCountries } from './components/fetchCountries';
+import { oneCountryMarkup } from './components/oneCountryMarkup';
+import { countriesListMarkup } from './components/listOfCountriesMarkup';
 
 const DEBOUNCE_DELAY = 300;
-const searchInput = document.querySelector('#search-box');
 
+const searchInput = document.querySelector('#search-box');
 const listOfCountries = document.querySelector('.country-list');
 const countryInfoContainer = document.querySelector('.country-info');
+
 let countries = [];
-searchInput.addEventListener(
-  'input',
-  debounce(() => {
-    const countryName = searchInput.value.trim();
 
-    if (!countryName) {
-      listOfCountries.innerHTML = '';
-      countryInfoContainer.innerHTML = '';
-      return;
-    }
-    fetchCountries(countryName)
-      .then(countrydata => {
-        countries = countrydata;
+searchInput.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY));
 
-        if (countries.length > 10) {
-          listOfCountries.innerHTML = '';
-          countryInfoContainer.innerHTML = '';
-          return Notify.info(
-            'Too many matches found. Please enter a more specific name.'
-          );
-        } else if (countries.length >= 2 && countries.length <= 10) {
-          countryInfoContainer.innerHTML = '';
-          renderListOfCountries(countries);
-        } else if (countries.length === 1) {
-          listOfCountries.innerHTML = '';
-          renderOneCountry(countries);
-        }
-      })
-      .catch(showError);
-  }, DEBOUNCE_DELAY)
-);
+function onSearch() {
+  const countryName = searchInput.value.trim();
+
+  if (!countryName) {
+    listOfCountries.innerHTML = '';
+    countryInfoContainer.innerHTML = '';
+    return;
+  }
+
+  fetchCountries(countryName)
+    .then(countryData => {
+      countries = countryData;
+
+      if (countries.length > 10) {
+        listOfCountries.innerHTML = '';
+        countryInfoContainer.innerHTML = '';
+
+        return Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
+      } else if (countries.length >= 2 && countries.length <= 10) {
+        countryInfoContainer.innerHTML = '';
+        renderListOfCountries(countries);
+      } else if (countries.length === 1) {
+        listOfCountries.innerHTML = '';
+        renderOneCountry(countries);
+      }
+    })
+    .catch(showError);
+}
 
 function showError() {
   listOfCountries.innerHTML = '';
@@ -48,35 +53,9 @@ function showError() {
 }
 
 function renderListOfCountries(countries) {
-  const countriesListMarkup = countries
-    .map(country => {
-      return `
-  <li class ="country-item"><img src = '${country.flags.svg}' width="50", height ="40" alt = "Flag of ${country.name.official}"><p>${country.name.official}</p>
-  </li>
-  `;
-    })
-    .join('');
-
-  listOfCountries.innerHTML = countriesListMarkup;
+  listOfCountries.innerHTML = countriesListMarkup(countries);
 }
 
 function renderOneCountry(countries) {
-  const oneCountryMarkup = countries
-    .map(country => {
-      return `
-  <img class = "country-img" src = '${
-    country.flags.svg
-  }' width="100", height ="70" alt = "Flag of ${country.name.official}">
-  <h1 class="country-name">${country.name.official}</h1>
-  
-  <p class = "country-data"><b>Capital: </b>${country.capital}</p>
-  
- <p class = "country-data"><b>Population: </b>${country.population}</p> 
-  
-  <p class = "country-data"><b>Languages: </b>${Object.values(
-    country.languages
-  ).join(', ')}</p>`;
-    })
-    .join('');
-  countryInfoContainer.innerHTML = oneCountryMarkup;
+  countryInfoContainer.innerHTML = oneCountryMarkup(countries);
 }

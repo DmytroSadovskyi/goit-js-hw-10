@@ -1,4 +1,4 @@
-export const countriesListMarkup = countriesArr => {
+export default function countriesListMarkup(countriesArr) {
   return countriesArr
     .map(({ flags, name }) => {
       return `
@@ -7,4 +7,4 @@ export const countriesListMarkup = countriesArr => {
   `;
     })
     .join('');
-};
+}

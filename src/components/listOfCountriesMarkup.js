@@ -1,4 +1,4 @@
-export default function countriesListMarkup(countriesArr) {
+export default function createCountriesListMarkup(countriesArr) {
   return countriesArr
     .map(({ flags, name }) => {
       return `

@@ -1,4 +1,4 @@
-export const oneCountryMarkup = countriesArr => {
+export default function oneCountryMarkup(countriesArr) {
   return countriesArr
     .map(({ flags, name, capital, population, languages }) => {
       return `
@@ -16,4 +16,4 @@ export const oneCountryMarkup = countriesArr => {
   )}</p>`;
     })
     .join('');
-};
+}

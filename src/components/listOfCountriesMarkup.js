@@ -1,8 +1,8 @@
 export default function createCountriesListMarkup(countriesArr) {
   return countriesArr
-    .map(({ flags, name }) => {
+    .map(({ flags: { svg }, name: { official } }) => {
       return `
-  <li class ="country-item"><img src = '${flags.svg}' width="50", height ="40" alt = "Flag of ${name.official}"><p>${name.official}</p>
+  <li class ="country-item"><img src = '${svg}' width="50", height ="40" alt = "Flag of ${official}"><p>${official}</p>
   </li>
   `;
     })

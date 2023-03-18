@@ -1,11 +1,16 @@
 export default function createOneCountryMarkup(countriesArr) {
   return countriesArr
-    .map(({ flags, name, capital, population, languages }) => {
-      return `
-  <img class = "country-img" src = '${
-    flags.svg
-  }' width="100", height ="70" alt = "Flag of ${name.official}">
-  <h1 class="country-name">${name.official}</h1>
+    .map(
+      ({
+        flags: { svg },
+        name: { official },
+        capital,
+        population,
+        languages,
+      }) => {
+        return `
+  <img class = "country-img" src = '${svg}' width="100", height ="70" alt = "Flag of ${official}">
+  <h1 class="country-name">${official}</h1>
   
   <p class = "country-data"><b>Capital: </b>${capital}</p>
   
@@ -14,6 +19,7 @@ export default function createOneCountryMarkup(countriesArr) {
   <p class = "country-data"><b>Languages: </b>${Object.values(languages).join(
     ', '
   )}</p>`;
-    })
+      }
+    )
     .join('');
 }
